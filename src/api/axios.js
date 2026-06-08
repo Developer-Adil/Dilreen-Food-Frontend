@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: import.meta.env.VITE_API_URL,
+  baseURL: import.meta.env.VITE_API_URL || "https://dilreen-food.onrender.com/api",
   headers: {
     "Content-Type": "application/json",
   },
@@ -17,9 +17,7 @@ API.interceptors.request.use(
 
     return config;
   },
-  (error) => {
-    return Promise.reject(error);
-  }
+  (error) => Promise.reject(error)
 );
 
 export default API;
