@@ -1,12 +1,10 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import toast from "react-hot-toast";
 import API from "../api/axios";
 
 function Login() {
-  const navigate = useNavigate();
-
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -22,32 +20,32 @@ function Login() {
   };
 
   const handleLogin = async (e) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  if (!formData.email || !formData.password) {
-    toast.error("Please fill all fields");
-    return;
-  }
+    if (!formData.email || !formData.password) {
+      toast.error("Please fill all fields");
+      return;
+    }
 
-  try {
-    setLoading(true);
+    try {
+      setLoading(true);
 
-    const res = await API.post("/auth/login", formData);
+      const res = await API.post("/auth/login", formData);
 
-    console.log("LOGIN RESPONSE:", res.data);
+      localStorage.setItem("token", res.data.token);
+      localStorage.setItem("user", JSON.stringify(res.data.user));
 
-    localStorage.setItem("token", res.data.token);
-    localStorage.setItem("user", JSON.stringify(res.data.user));
+      toast.success("Login successful");
 
-    toast.success("Login successful");
-    navigate("/");
-  } catch (error) {
-    console.log("LOGIN ERROR:", error.response?.data || error.message);
-    toast.error(error.response?.data?.message || "Login failed");
-  } finally {
-    setLoading(false);
-  }
-};
+      window.location.href = "/";
+    } catch (error) {
+      console.log("LOGIN ERROR:", error.response?.data || error.message);
+      toast.error(error.response?.data?.message || "Login failed");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[#080808] px-4 text-white">
       <div className="absolute bottom-[-100px] left-[-100px] h-96 w-96 rounded-full bg-red-500/20 blur-3xl"></div>
@@ -64,7 +62,11 @@ function Login() {
           to="/"
           className="mb-8 inline-block text-2xl font-black tracking-tight"
         >
-          Dilreen's<span className="text-red-500 font-black leading-tight"> Zaika</span>
+          Dilreen's
+          <span className="text-red-500 font-black leading-tight">
+            {" "}
+            Zaika
+          </span>
         </Link>
 
         <h1 className="text-4xl font-black">
